@@ -2,6 +2,7 @@
 {
 	const btn = document.querySelector('#btn');
 	btn.addEventListener('click', loadData, false);
+	//getData(); non ES6 path
 })(); //IIFE
 //
 function loadData(e)
@@ -115,3 +116,123 @@ function buildTables(tables)
 		}
 	});
 }
+//-------------------------------------------------
+// non ES6
+//
+function getData()
+{
+	var data = 'ubigeos.txt';
+	var request = new XMLHttpRequest;
+	//
+	request.open('GET', data, true);
+	request.setRequestHeader("Content-type", "application/text");
+	request.onreadystatechange = function()
+	{
+		if(request.readyState === 4 && request.status === 200)
+		{
+			var resp = request.responseText;
+			formatData(resp);
+		}
+		else console.log(request.readyState);
+	}
+	request.send();
+}
+//
+function formatData(data)
+{
+	var json = [], finalJson = [], tables = [];
+	//
+	data = data.split('\n');
+	for(var i = 0; i < data.length; i++)
+	{
+		data[i] = data[i].replace(/[“”]+/g, '');
+		data[i] = data[i].split('/');
+		for(var j = 0; j < data[i].length; j++) data[i][j] = data[i][j].trim();
+		//
+		json.push({
+			departamento: data[i][0],
+			provincia: data[i][1],
+			distrito: data[i][2]
+		});
+	}
+	//
+	for(var k = 0; k < json.length; k++)
+	{
+		var dp = json[k].departamento,
+			pr = json[k].provincia,
+			dt = json[k].distrito;
+		//
+		finalJson.push({
+			departamento: (dp != '') ? {codigo: dp.substr(0, dp.indexOf(' ')), nombre: dp.substr(dp.indexOf(' ') +1)} : '',
+			provincia: (pr != '') ? {codigo: pr.substr(0, pr.indexOf(' ')), nombre: pr.substr(pr.indexOf(' ') +1)} : '',
+			distrito: (dt != '') ? {codigo: dt.substr(0, dt.indexOf(' ')), nombre: dt.substr(dt.indexOf(' ') +1)} : ''
+		});
+	}
+	console.log(finalJson);
+	//
+	tables = [{departamento: []}, {provincia: []}, {distrito: []}];
+	for(var l = 0; l < finalJson.length; l++)
+	{
+		if(finalJson[l].provincia == '')
+		{
+			tables[0].departamento.push({
+				codigo: finalJson[l].departamento.codigo, 
+				nombre: finalJson[l].departamento.nombre, 
+				codigoPadre: '-', 
+				descripcionPadre: '-'
+			});
+		}
+		else if(finalJson[l].provincia != '' && finalJson[l].distrito == '')
+		{
+			tables[1].provincia.push({
+				codigo: finalJson[l].provincia.codigo, 
+				nombre: finalJson[l].provincia.nombre, 
+				codigoPadre: finalJson[l].departamento.codigo, 
+				descripcionPadre: finalJson[l].departamento.nombre
+			});
+		}
+		else
+		{
+			tables[2].distrito.push({
+				codigo: finalJson[l].distrito.codigo, 
+				nombre: finalJson[l].distrito.nombre, 
+				codigoPadre: finalJson[l].provincia.codigo, 
+				descripcionPadre: finalJson[l].provincia.nombre
+			});
+		}
+	}
+	console.log(tables);
+	createTables(tables);
+}
+//
+function createTables(tables)
+{
+	var tablesWrapper = document.getElementById('tables');
+	//
+	for(var i = 0; i < tables.length; i++)
+	{
+		for(let j in tables[i])
+		{
+			var tableTitle = document.createElement('h2'),
+				tableEl = document.createElement('table'),
+				tableHeader = document.createElement('tr');
+			//
+			tableTitle.innerHTML = j;
+			tablesWrapper.appendChild(tableTitle);
+			tableHeader.innerHTML = '<th>Código</th><th>Nombre</th><th>Código Padre</th><th>Descripción Padre</th>';
+			tableEl.appendChild(tableHeader);
+			for(var k in tables[i][j])
+			{
+				var row = tables[i][j],
+					tr = document.createElement('tr');
+				tr.innerHTML = '<td>'+ row[k].codigo + '</td>';
+				tr.innerHTML += '<td>'+ row[k].nombre + '</td>';
+				tr.innerHTML += '<td>'+ row[k].codigoPadre + '</td>';
+				tr.innerHTML += '<td>'+ row[k].descripcionPadre + '</td>';
+				tableEl.appendChild(tr);
+			}
+			tablesWrapper.appendChild(tableEl);
+		}
+	}
+}
+
