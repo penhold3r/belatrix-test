@@ -5,20 +5,20 @@
 	//getData(); non ES6 path
 })(); //IIFE
 //
-function loadData(e)
+const loadData = e =>
 {
 	const ubigeos = 'ubigeos.txt'; //instance of raw data
 	e.preventDefault(); // just to be sure
 	//
 	fetch(ubigeos) // load data
-		.then((resp) => resp.text()) // parse response to text
-		.then((data) => data.split('\n')) // create array by each line
-		.then((data) => data.map((line) => line.replace(/[“”]+/g, ''))) // strip quotation marks from lines
-		.then((data) => data.map((line) => line.split('/'))) // separate into single elements
-		.then((data) =>
+		.then(resp => resp.text()) // parse response to text
+		.then(data => data.split('\n')) // create array by each line
+		.then(data => data.map((line) => line.replace(/[“”]+/g, ''))) // strip quotation marks from lines
+		.then(data => data.map((line) => line.split('/'))) // separate into single elements
+		.then(data =>
 		{
 			let json = []; // new object
-			data.map((line) =>
+			data.map(line =>
 			{
 				json.push({ // for each line of arrays create a key-value object
 					departamento: line[0].trim(), // trimming...
@@ -28,14 +28,14 @@ function loadData(e)
 			});
 			return json;
 		})
-		.then((data) =>
+		.then(data =>
 		{
 			let finalJson = [];
-			data.map((line) =>
+			data.map(line =>
 			{
-				let dp = line.departamento,
-					pr = line.provincia,
-					dt = line.distrito;
+				const dp = line.departamento;
+				const pr = line.provincia;
+				const dt = line.distrito;
 				//
 				finalJson.push({ // separate name and code for each entry
 					departamento: (dp != '') ? {codigo: dp.substr(0, dp.indexOf(' ')), nombre: dp.substr(dp.indexOf(' ') +1)} : '',
@@ -46,11 +46,11 @@ function loadData(e)
 			console.log(finalJson); // final object ordered and labeled
 			return finalJson
 		})
-		.then((data) =>
+		.then(data =>
 		{
 			// an array for each future table
 			let tables = [{departamento: []}, {provincia: []}, {distrito: []}];
-			data.map((line) =>
+			data.map(line =>
 			{
 				// filtering elemnts for table and labeling acordingly
 				if(line.provincia == '')
@@ -83,20 +83,20 @@ function loadData(e)
 			});
 			return tables;
 		})
-		.then((data) => buildTables(data));
+		.then(data => buildTables(data));
 }
 //
-function buildTables(tables)
+const buildTables = tables =>
 {
 	const tablesWrapper = document.querySelector('#tables'); 
 	//
-	tables.map((table) =>
+	tables.map(table =>
 	{
 		for(let i in table) // creating a table for each array
 		{
-			let tableTitle = document.createElement('h2'),
-				tableEl = document.createElement('table'),
-				tableHeader = document.createElement('tr');
+			const tableTitle = document.createElement('h2');
+			const tableEl = document.createElement('table');
+			const tableHeader = document.createElement('tr');
 			//
 			tableTitle.innerHTML = i; // name extracted from array key
 			tablesWrapper.appendChild(tableTitle);
