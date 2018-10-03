@@ -10,7 +10,7 @@ module.exports = {
    entry: ['whatwg-fetch', './src/js/script.js'],
    output: {
       filename: 'js/bundle.js',
-      path: path.resolve(__dirname, './public/'),
+      path: path.resolve(__dirname, './docs/'),
       publicPath: './'
    },
    module: {

@@ -7,6 +7,7 @@ import loadData from './load-data';
 const init = () => {
    document.querySelector('.btn').addEventListener('click', handleClick, false);
    M.AutoInit();
+   console.log('all set!');
 }
 
 // callback to load button
