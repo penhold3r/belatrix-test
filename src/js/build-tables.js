@@ -1,75 +1,87 @@
 /**
- * 
- * @param {Array} data - Array of ordered data 
+ *
+ * @param {Array} data - Array of ordered data
  */
 const buildTables = data => {
-   const tablesWrapper = document.querySelector('#tables');
-   const tables = data.reduce((tables, line) => {
-      tables = [
-         { departamento: (tables[0] && tables[0].departamento) || [] },
-         { provincia: (tables[1] && tables[1].provincia) || [] },
-         { distrito: (tables[2] && tables[2].distrito) || [] }
-      ];
+	const tablesWrapper = document.querySelector('#tables')
 
-      if (line.provincia == '') {
-         tables[0].departamento.push({
-            codigo: line.departamento.codigo,
-            nombre: line.departamento.nombre,
-            codigoPadre: '-',
-            descripcionPadre: '-'
-         });
-      }
-      else if (line.provincia != '' && line.distrito == '') {
-         tables[1].provincia.push({
-            codigo: line.provincia.codigo,
-            nombre: line.provincia.nombre,
-            codigoPadre: line.departamento.codigo,
-            descripcionPadre: line.departamento.nombre
-         });
-      }
-      else {
-         tables[2].distrito.push({
-            codigo: line.distrito.codigo,
-            nombre: line.distrito.nombre,
-            codigoPadre: line.provincia.codigo,
-            descripcionPadre: line.provincia.nombre
-         });
-      }
+	// group data
+	const tables = data.reduce((tables, line) => {
+		// model object
+		tables = {
+			departamento: (tables.departamento && tables.departamento) || [],
+			provincia: (tables.provincia && tables.provincia) || [],
+			distrito: (tables.distrito && tables.distrito) || []
+		}
 
-      return tables;
+		// filter data by table
+		if (line.provincia == '') {
+			tables.departamento.push({
+				codigo: line.departamento.codigo,
+				nombre: line.departamento.nombre,
+				codigoPadre: '-',
+				descripcionPadre: '-'
+			})
+		} else if (line.provincia != '' && line.distrito == '') {
+			tables.provincia.push({
+				codigo: line.provincia.codigo,
+				nombre: line.provincia.nombre,
+				codigoPadre: line.departamento.codigo,
+				descripcionPadre: line.departamento.nombre
+			})
+		} else {
+			tables.distrito.push({
+				codigo: line.distrito.codigo,
+				nombre: line.distrito.nombre,
+				codigoPadre: line.provincia.codigo,
+				descripcionPadre: line.provincia.nombre
+			})
+		}
 
-   }, []);
+		return tables
+	}, {})
 
-   console.log('TABLAS: ', JSON.stringify(tables, null, 2));
+	console.log('TABLAS: ', JSON.stringify(tables, null, 2))
 
-   //
-   tables.map((table) => {
-      // creating a table for each array
-      for (let i in table) {
-         let tableTitle = document.createElement('h2');
-         let tableEl = document.createElement('table');
-         let tableHeader = document.createElement('tr');
-         //
-         tableTitle.innerHTML = i; // name extracted from array key
-         tableTitle.classList.add('amber', 'lighten-5', 'amber-text', 'text-darken-1');
-         tablesWrapper.appendChild(tableTitle);
-         tableHeader.innerHTML = '<th>Código</th><th>Nombre</th><th>Código Padre</th><th>Descripción Padre</th>'; // constant header
-         tableEl.classList.add('amber', 'lighten-5', 'grey-text', 'text-darken-3');
-         tableEl.appendChild(tableHeader);
+	// create tables
+	Object.keys(tables).map(table => {
+		const title = table.charAt(0).toUpperCase() + table.slice(1) // capitalize table title
+		const tableTitle = document.createElement('h2')
+		const tableEl = document.createElement('table')
+		const tableHeader = document.createElement('tr')
+		const headers = ['Código', 'Nombre', 'Código Padre', 'Descripción Padre']
 
-         // populate rows with each entry
-         for (let j in table[i]) {
-            let row = table[i];
-            let tr = document.createElement('tr');
-            tr.innerHTML = '<td>' + row[j].codigo + '</td>';
-            tr.innerHTML += '<td>' + row[j].nombre + '</td>';
-            tr.innerHTML += '<td>' + row[j].codigoPadre + '</td>';
-            tr.innerHTML += '<td>' + row[j].descripcionPadre + '</td>';
-            tableEl.appendChild(tr);
-         }
-         tablesWrapper.appendChild(tableEl); // insert table into DOM
-      }
-   });
+		tableTitle.innerText = title
+		// materialize classes
+		tableTitle.classList.add('amber', 'lighten-5', 'amber-text', 'text-darken-1')
+		tablesWrapper.appendChild(tableTitle)
+
+		// table headers
+		headers.map(header => {
+			const rowHeader = document.createElement('th')
+			rowHeader.innerText = header
+			tableHeader.appendChild(rowHeader)
+		})
+		// materialize classes
+		tableEl.classList.add('amber', 'lighten-5', 'grey-text', 'text-darken-3')
+		tableEl.appendChild(tableHeader)
+
+		// tables rows
+		tables[table].map(row => {
+			const tr = document.createElement('tr')
+
+			// row content
+			Object.values(row).map(value => {
+				const td = document.createElement('td')
+				td.innerText = value
+				tr.appendChild(td)
+			})
+
+			tableEl.appendChild(tr)
+		})
+
+		tablesWrapper.appendChild(tableEl) // insert table into DOM
+	})
 }
 
-export default buildTables;
+export default buildTables

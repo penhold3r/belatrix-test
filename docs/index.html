@@ -6,7 +6,7 @@
    <meta charset="UTF-8">
 <style type="text/css">@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700);
 /*!
- * Materialize v1.0.0-rc.2 (http://materializecss.com)
+ * Materialize v1.0.0 (http://materializecss.com)
  * Copyright 2014-2017 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
@@ -2998,7 +2998,7 @@ td, th {
     /* sort out borders */
   }
   table.responsive-table td:empty:before {
-    content: '\A0';
+    content: '\00a0';
   }
   table.responsive-table th,
   table.responsive-table td {
@@ -3017,7 +3017,7 @@ td, th {
     padding: 0 10px 0 0;
   }
   table.responsive-table thead tr th::before {
-    content: "\A0";
+    content: "\00a0";
   }
   table.responsive-table tbody {
     display: block;
@@ -6348,7 +6348,7 @@ textarea.materialize-textarea + label:after, .select-wrapper + label:after {
   transform-origin: 0 0;
 }
 
-.input-field > input[type]:-webkit-autofill:not(.browser-default) + label,
+.input-field > input[type]:-webkit-autofill:not(.browser-default):not([type="search"]) + label,
 .input-field > input[type=date]:not(.browser-default) + label,
 .input-field > input[type=time]:not(.browser-default) + label {
   transform: translateY(-14px) scale(0.8);
@@ -8544,14 +8544,17 @@ body {
 </style></head>
 
 <body>
+
    <nav class="grey darken-3">
       <div class="nav-wrapper">
          <h1 class="brand-logo center amber-text text-darken-1">Ubigeos</h1>
       </div>
    </nav>
    <div class="container">
-      <div class="center-align"><a class="waves-effect waves-light btn amber darken-1">Load Data</a></div>
-      <div id="tables" class=""></div>
+      <div class="center-align">
+         <a class="waves-effect waves-light btn amber darken-1">Load Data</a>
+      </div>
+      <div id="tables" class="table-container"></div>
    </div>
 
 <script type="text/javascript" src="./js/bundle.js"></script></body>

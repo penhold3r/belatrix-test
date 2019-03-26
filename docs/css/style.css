@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700);
 /*!
- * Materialize v1.0.0-rc.2 (http://materializecss.com)
+ * Materialize v1.0.0 (http://materializecss.com)
  * Copyright 2014-2017 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
@@ -2992,7 +2992,7 @@ td, th {
     /* sort out borders */
   }
   table.responsive-table td:empty:before {
-    content: '\A0';
+    content: '\00a0';
   }
   table.responsive-table th,
   table.responsive-table td {
@@ -3011,7 +3011,7 @@ td, th {
     padding: 0 10px 0 0;
   }
   table.responsive-table thead tr th::before {
-    content: "\A0";
+    content: "\00a0";
   }
   table.responsive-table tbody {
     display: block;
@@ -6342,7 +6342,7 @@ textarea.materialize-textarea + label:after, .select-wrapper + label:after {
   transform-origin: 0 0;
 }
 
-.input-field > input[type]:-webkit-autofill:not(.browser-default) + label,
+.input-field > input[type]:-webkit-autofill:not(.browser-default):not([type="search"]) + label,
 .input-field > input[type=date]:not(.browser-default) + label,
 .input-field > input[type=time]:not(.browser-default) + label {
   transform: translateY(-14px) scale(0.8);
