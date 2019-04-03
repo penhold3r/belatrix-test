@@ -13,7 +13,9 @@ const init = () => {
 // callback to load button
 const handleClick = e => {
 	//instance of raw data
-	const ubigeos = 'https://raw.githubusercontent.com/penhold3r/belatrix-test/master/ubigeos.txt'
+	const ubigeos =
+		'https://raw.githubusercontent.com/penhold3r/belatrix-test/master/src/data/ubigeos.txt'
+
 	// local
 	//const ubigeos = '../data/ubigeos.txt'
 
