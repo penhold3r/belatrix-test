@@ -46,4 +46,4 @@ departamento, provincia y distrito. Por ejemplo:
 
 ---
 
-(Demo)[https://penhold3r.github.io/belatrix-test/]
+[Demo](https://penhold3r.github.io/belatrix-test/)
